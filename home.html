@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- IMPORT SCRIPTS & STYLES -->
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+
+
+    <style>
+        body{
+            background: #f0ecff;
+        }
+
+        .card {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =======MODALS======= -->
+    <!-- LOGIN MODAL -->
+    <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Username:</label>
+                  <input type="text" class="form-control" id="username-input" value="Yarob99">
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Password:</label>
+                  <input type="password" class="form-control" id="password-input" value="123456">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="loginBtnClicked()">Login</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--// LOGIN MODAL //--> 
+
+
+    <!-- =============ALERTS========== -->
+    <div id="success-alert" class="bg-primary" style="position: fixed; z-index: 999999; width: 30%; bottom: 0; right: 0;"></div>
+
+
+    <!-- NAVIGATION BAR CONT-->
+    <div class="container">
+
+        <div class="d-flex justify-content-center">
+            <div class="col-9">
+                <nav class="navbar navbar-expand-lg bg-light shadow rounded pt-3">
+                    <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Tarmeez</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Profile</a>
+                        </li>
+                        </ul>
+
+                        <!-- NON-LOGGED IN USER -->
+                        <div class="d-flex w-100 justify-content-end" id="logged-in-div">
+                            <button id="login-btn" type="button" data-bs-toggle="modal" data-bs-target="#login-modal" class="btn btn-outline-success mx-2">Login</button>
+                            <button id="register-btn" type="button" class="btn btn-outline-success">Register</button>
+                        </div>
+                        <!--// NON-LOGGED IN USER //-->
+
+                        <!-- FOR LOGGED IN USER -->
+                        <div class="d-flex w-100 justify-content-end" id="logout-div">
+                            <button onclick="logout()" id="logout-btn" type="button" data-bs-toggle="modal" class="btn btn-outline-danger mx-2">Logout</button>
+                        </div>
+                        <!--// FOR LOGGED IN USER //-->
+
+                    </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!--// NAVIGATION BAR CONT //-->
+
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="height: 1000px;">
+        
+        <!-- POSTS -->
+        <div class="d-flex justify-content-center mt-5">
+            <div class="col-9">
+                <div id="posts">
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+
+                    <!-- POST -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <img class="rounded-circle border border-2" src="./profile-pics/1.png" alt="" style="width: 40px; height: 40px">
+                            <b>@Yarhmm</b>
+                        </div>
+                        <div class="card-body">
+                            <img class="w-100" src="./placeholders/1.jpeg" alt="">
+
+                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                2 min ago
+                            </h6>
+
+                            <h5>
+                                Hello World
+                            </h5>
+
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dicta aut blanditiis non, vel error ipsa commodi corrupti cupiditate libero tenetur modi architecto, rerum totam. Ut doloribus laudantium ipsum in?
+                            </p>
+
+                            <hr>
+
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+
+                                <span>
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--// POST //-->
+
+                    
+                    
+                </div>
+            </div>
+        </div>
+        <!--// POSTS //-->
+    </div>
+    <!--// MAIN CONTENT //-->
+</body>
+
+<script>
+
+    setupUI()
+// "http://localhost:3030/api/v1/posts"
+// 
+
+    const baseUrl = "http://localhost:3030/api/v1"
+    axios.get(`${baseUrl}/posts?limit=2`)
+    .then((response) => {
+        const posts = response.data.data
+    
+        document.getElementById("posts").innerHTML = ""
+        for(post of posts)
+        {
+            console.log(post)
+
+            const author = post.author
+            const postTitle = ""
+
+            if(post.title != null)
+            {
+                postTitle = post.title
+            }
+            let content = `
+                <div class="card shadow">
+                    <div class="card-header">
+                        <img class="rounded-circle border border-2" src="${author.profile_image}" alt="" style="width: 40px; height: 40px">
+                        <b>${author.username}</b>
+                    </div>
+                    <div class="card-body">
+                        <img class="w-100" src="${post.image}" alt="">
+
+                        <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                            ${post.created_at}
+                        </h6>
+
+                        <h5>
+                            ${postTitle}
+                        </h5>
+
+                        <p>
+                            ${post.body}
+                        </p>
+
+                        <hr>
+
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                            </svg>
+
+                            <span>
+                                (3) Comments
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `
+
+            document.getElementById("posts").innerHTML += content
+        }
+    })
+
+    function loginBtnClicked()
+    {
+        const username = document.getElementById("username-input").value
+        const password = document.getElementById("password-input").value
+
+        const params = {
+            "username": username,
+            "password" : password
+        }
+
+        const url = `${baseUrl}/login`
+        axios.post(url, params)
+        .then((response) => {
+            localStorage.setItem("token", response.data.token)
+            localStorage.setItem("user", JSON.stringify(response.data.user))
+
+            const modal = document.getElementById("login-modal")
+            const modalInstance = bootstrap.Modal.getInstance(modal)
+            modalInstance.hide()
+            alert("user logged in successfully")
+            setupUI()
+
+        })
+    }
+
+    function logout()
+    {
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+        alert("logged out successfully")
+        setupUI()
+    }
+
+    // showSuccessAlert()
+
+    function showSuccessAlert()
+    {
+        const alertPlaceholder = document.getElementById('success-alert')
+
+        const alert = (message, type) => {
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('')
+
+            alertPlaceholder.append(wrapper)
+        }
+
+        const alertTrigger = document.getElementById('liveAlertBtn')
+        if (alertTrigger) {
+            alertTrigger.addEventListener('click', () => {
+                alert('Nice, you triggered this alert message!', 'success')
+            })
+        }
+    }
+
+    function setupUI()
+    {
+        const token = localStorage.getItem("token")
+
+        const loginDiv = document.getElementById("logged-in-div")
+        const logoutDiv = document.getElementById("logout-div")
+
+        if(token == null) // user is guest (not logged in)
+        {
+            loginDiv.style.setProperty("display", "flex", "important")
+            logoutDiv.style.setProperty("display", "none", "important")
+        }else {
+            loginDiv.style.setProperty("display", "none", "important")
+            logoutDiv.style.setProperty("display", "flex", "important")
+        }
+    }
+</script>
+</html>
